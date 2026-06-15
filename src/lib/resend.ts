@@ -104,10 +104,14 @@ export async function sendBreachAlert(data: AlertEmailData): Promise<boolean> {
 </body>
 </html>`;
 
+  const isPublicEmail = /@(gmail|yahoo|outlook|hotmail|icloud)\.com$/i.test(FROM_EMAIL);
+  const mailSender = isPublicEmail ? 'onboarding@resend.dev' : FROM_EMAIL;
+  const mailRecipient = FROM_EMAIL;
+
   try {
     const { error } = await getResend().emails.send({
-      from: FROM_EMAIL,
-      to: [FROM_EMAIL], // In production: send to store manager / ops team
+      from: mailSender,
+      to: [mailRecipient], // In production: send to store manager / ops team
       subject,
       html,
     });
